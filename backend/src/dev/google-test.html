@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tes Login Google (dev)</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:720px;margin:32px auto;padding:0 16px}
+  pre{background:#f4f4f4;padding:12px;border-radius:8px;white-space:pre-wrap;word-break:break-all}
+  h1{font-size:20px}
+</style>
+</head>
+<body>
+<h1>Tes Login Google (khusus development)</h1>
+<p>Klik tombol, pilih akun, lalu lihat respons dari <code>POST /api/auth/google</code>.</p>
+<div id="btn"></div>
+<h3>Respons backend</h3>
+<pre id="out">Belum ada.</pre>
+<h3>ID token dari Google</h3>
+<pre id="token">-</pre>
+
+<script>
+async function init() {
+  const out = document.getElementById('out');
+  const { googleClientId } = await (await fetch('/dev/config')).json();
+  if (!googleClientId) { out.textContent = 'GOOGLE_CLIENT_ID belum diisi di file .env'; return; }
+
+  google.accounts.id.initialize({
+    client_id: googleClientId,
+    callback: async (resp) => {
+      document.getElementById('token').textContent = resp.credential;
+      const r = await fetch('/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken: resp.credential }),
+      });
+      out.textContent = 'HTTP ' + r.status + '\n' + JSON.stringify(await r.json(), null, 2);
+    },
+  });
+  google.accounts.id.renderButton(document.getElementById('btn'), { theme: 'outline', size: 'large' });
+}
+</script>
+<script src="https://accounts.google.com/gsi/client" async defer onload="init()"></script>
+</body>
+</html>

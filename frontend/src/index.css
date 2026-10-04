@@ -1,0 +1,17 @@
+:root {
+  --font-DelaGothicOne: 'Dela Gothic One', system-ui, sans-serif;
+  --font-SpaceMono: 'Space Mono', ui-monospace, monospace;
+  --main-color: #323232;
+  --page-bg: #f3ecdc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--main-color);
+  font-family: var(--font-SpaceMono);
+}
+
+button, input { font-family: inherit; }

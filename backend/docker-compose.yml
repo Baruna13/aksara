@@ -1,0 +1,25 @@
+# Database PostgreSQL untuk development lokal.
+#   Nyalakan : docker compose up -d
+#   Matikan  : docker compose down        (data tetap aman di volume)
+#   Hapus data sekalian: docker compose down -v
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: aksara-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aksara
+      POSTGRES_PASSWORD: aksara_dev
+      POSTGRES_DB: aksara
+    ports:
+      - "5432:5432"      # kalau bentrok dengan Postgres lain, ganti jadi "5433:5432" dan ubah port di DATABASE_URL
+    volumes:
+      - aksara_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aksara -d aksara"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  aksara_pgdata:
