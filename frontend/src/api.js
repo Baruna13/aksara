@@ -78,3 +78,15 @@ export const api = {
     }
   },
 };
+
+// ---- Fitur belajar (lihat backend/API.md) ----
+export const belajar = {
+  beranda: () => authed('/api/beranda'),
+  progres: () => authed('/api/progres'),
+  daftarBab: () => authed('/api/materi'),
+  bab: (babId) => authed(`/api/materi/${babId}`),
+  // membuka kartu = otomatis ditandai "dilihat" oleh server
+  kartu: (babId, kartuId) => authed(`/api/materi/${babId}/kartu/${kartuId}`),
+  mulaiKuis: (babId) => authed(`/api/kuis/${babId}`),
+  kirimKuis: (babId, jawaban) => authed(`/api/kuis/${babId}/submit`, { method: 'POST', body: { jawaban } }),
+};

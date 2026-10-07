@@ -36,6 +36,22 @@ Kalau error "port 5432 is already allocated": di PC lu sudah ada Postgres lain. 
 
 Response register/login: `{ "user": {...}, "accessToken": "...", "refreshToken": "..." }`
 
+## Fitur belajar (materi + kuis + progres)
+Dokumentasi lengkap endpoint dan contoh respons: **[API.md](API.md)** (untuk yang mengerjakan frontend).
+
+| Path | Fungsi |
+|---|---|
+| `GET /api/beranda` | Data layar beranda (salam, lanjutkan belajar, ringkasan) |
+| `GET /api/materi` · `/api/materi/:babId` · `/api/materi/:babId/kartu/:kartuId` | Bab, kartu, detail kartu |
+| `GET /api/kuis/:babId` · `POST /api/kuis/:babId/submit` | Ambil soal dan kirim jawaban |
+| `GET /api/progres` | Statistik progres |
+
+**Mengedit isi materi:** semua isi (huruf, bacaan, contoh kata, catatan) ada di satu file, `src/content/materi.js`,
+dan bisa diedit lewat GitHub tanpa menyentuh database. Semua kartu masih berstatus `"draf"`; ubah jadi `"final"`
+setelah diverifikasi guru/buku. Kuis dibuat otomatis dari data kartu itu, jadi tidak ada bank soal yang perlu ditulis.
+
+Tabel baru (`letter_progress`, `quiz_attempts`, `study_days`) dibuat otomatis pada request pertama setelah deploy.
+
 ## Melindungi route lain
 ```js
 import { requireAuth } from '../middleware/auth.js';

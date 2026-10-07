@@ -1,9 +1,9 @@
 import app from './app.js';
 import { env } from './config/env.js';
-import { initDb, pool } from './db/index.js';
+import { ensureDb, pool } from './db/index.js';
 
 try {
-  await initDb();
+  await ensureDb();
 } catch (e) {
   console.error('Gagal terhubung ke database:', e.message);
   console.error('Cek DATABASE_URL di .env, dan pastikan database jalan (docker compose up -d).');

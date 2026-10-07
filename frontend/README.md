@@ -22,12 +22,17 @@ Tambahkan ke **Authorized JavaScript origins** pada Client ID:
 - `http://localhost:5173`
 - domain frontend online nanti (mis. `https://nama-app.vercel.app`)
 
+## Halaman belajar (versi tipis)
+Halaman di `src/pages/` (`MateriPage`, `BabPage`, `KartuPage`, `KuisPage`, `ProgresPage`, dan `Dashboard` sebagai beranda)
+sengaja dibuat polos, hanya untuk membuktikan alur dan endpoint backend jalan. Tinggal restyle sesuai desain.
+Pemanggilan API ada di objek `belajar` di `src/api.js`. Dokumentasi respons: `backend/API.md`.
+
 ## Struktur
 - `src/api.js` - pemanggil API + refresh token otomatis saat 401
 - `src/AuthContext.jsx` - state login (`useAuth()`: user, login, register, loginWithGoogle, logout)
 - `src/components/AuthForm.jsx` - form masuk/daftar + tombol Google
 - `src/pages/` - LoginPage dan Dashboard
-- Rute: `/masuk` (hanya tamu), `/beranda` (harus login)
+- Rute: `/masuk` (hanya tamu); harus login: `/beranda`, `/materi`, `/materi/:babId`, `/materi/:babId/:kartuId`, `/kuis/:babId`, `/progres`
 
 ## Deploy ke Vercel
 Framework: Vite. Env var `VITE_API_URL` diisi URL backend online (https), `VITE_GOOGLE_CLIENT_ID` diisi Client ID.
