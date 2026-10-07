@@ -51,15 +51,29 @@ router.get('/progress', requireAuth, async (req, res) => {
 2. Authorized JavaScript origins: `http://localhost:4000`, `http://localhost:5173`, dan domain frontend online nanti.
 3. Isi `GOOGLE_CLIENT_ID` di `.env`. Halaman tes: http://localhost:4000/dev/google (mati di production).
 
-## Deploy
-Backend ini butuh server Node biasa (Render, Railway, Fly.io, VPS), bukan serverless.
-Database online: pakai PostgreSQL terkelola (Neon, Supabase, Railway, dll). Kodenya sama persis, cukup ganti env:
-- `DATABASE_URL` = connection string dari penyedia database
-- `DATABASE_SSL=true` (kebanyakan penyedia mewajibkan SSL)
-- `NODE_ENV=production`
-- `JWT_ACCESS_SECRET` = string acak BARU (jangan pakai yang di laptop)
-- `CORS_ORIGINS` = domain frontend (https)
-- `GOOGLE_CLIENT_ID`
-Start command: `npm start`.
+## Deploy ke Vercel (tanpa kartu kredit)
+Backend ini bisa jalan sebagai serverless function di Vercel lewat `api/index.js` + `vercel.json`. Database tetap di Neon (atau Postgres online lain).
 
-Ke depannya, kalau tabel bertambah banyak (materi, kuis, progres), sebaiknya pakai alat migrasi seperti `node-pg-migrate` atau Prisma supaya perubahan skema terlacak. Untuk tahap auth ini `initDb()` sudah cukup.
+1. Vercel -> Add New Project -> pilih repo.
+2. **Root Directory: `backend`**, **Framework Preset: Other**. Build command dan output directory biarkan kosong.
+3. Environment Variables:
+   - `NODE_ENV=production`
+   - `JWT_ACCESS_SECRET` = string acak BARU
+   - `DATABASE_URL` = connection string Neon (pakai yang "pooled"/`-pooler`)
+   - `DATABASE_SSL=true`
+   - `GOOGLE_CLIENT_ID`
+   - `CORS_ORIGINS` = domain frontend (https, tanpa garis miring)
+4. Deploy, lalu tes `https://<nama-backend>.vercel.app/health`.
+
+Catatan serverless:
+- Tabel dibuat otomatis pada request pertama setelah instance bangun.
+- Rate limit (`express-rate-limit`) disimpan di memori per instance, jadi di Vercel sifatnya longgar. Cukup untuk tahap ini; kalau nanti serius, pindahkan ke penyimpanan bersama (mis. Upstash Redis).
+- Tidak ada "tidur satu menit" seperti hosting gratis berbasis container, tapi request pertama setelah lama sepi bisa sedikit lebih lambat.
+
+## Deploy ke server biasa (Render, Railway, VPS)
+Pakai `npm start` (`src/server.js`) dengan env yang sama. Tambahkan `PORT` kalau diminta platform.
+
+## Database online
+Pakai PostgreSQL terkelola (Neon, Supabase, dll). Kodenya sama persis, cukup ganti `DATABASE_URL` dan `DATABASE_SSL=true`.
+
+Ke depannya, kalau tabel bertambah banyak (materi, kuis, progres), sebaiknya pakai alat migrasi seperti `node-pg-migrate` atau Prisma. Untuk tahap auth ini `initDb()` sudah cukup.

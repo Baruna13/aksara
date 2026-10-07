@@ -3,6 +3,7 @@ import { env } from '../config/env.js';
 
 export const pool = new pg.Pool({
   connectionString: env.DATABASE_URL,
+  max: process.env.VERCEL ? 3 : 10,
   ssl: env.DATABASE_SSL ? { rejectUnauthorized: false } : undefined,
 });
 

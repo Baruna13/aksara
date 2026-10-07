@@ -8,6 +8,10 @@ import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
+// Di belakang proxy hosting (Vercel/Render): IP asli klien ada di header X-Forwarded-For.
+// Perlu agar rate limit membaca IP yang benar.
+if (env.NODE_ENV === 'production') app.set('trust proxy', 1);
+
 // Halaman tes dev dipasang sebelum helmet supaya script Google tidak diblokir.
 // Otomatis mati di production.
 if (env.NODE_ENV !== 'production') app.use('/dev', devRoutes);
