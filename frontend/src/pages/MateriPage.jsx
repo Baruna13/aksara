@@ -9,10 +9,11 @@ export default function MateriPage() {
       <Status loading={loading} error={error} />
       {data?.bab.map((b) => (
         <Link key={b.id} to={`/materi/${b.id}`}>
-          <Card>
+          <Card data-warna={b.warna}>
             <h2>Bab {b.urutan} · {b.judul}</h2>
+            <p className="muted">{b.ringkasan}</p>
             <Aksara>{b.preview}</Aksara>
-            <p className="muted">{b.kartuDilihat}/{b.jumlahKartu} kartu · <Bintang n={b.bintangTerbaik} /></p>
+            <p className="muted">{b.persen}% · <Bintang n={b.bintangTerbaik} /></p>
           </Card>
         </Link>
       ))}

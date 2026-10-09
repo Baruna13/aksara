@@ -36,21 +36,29 @@ Kalau error "port 5432 is already allocated": di PC lu sudah ada Postgres lain. 
 
 Response register/login: `{ "user": {...}, "accessToken": "...", "refreshToken": "..." }`
 
-## Fitur belajar (materi + kuis + progres)
+## Fitur belajar (jalur ala Duolingo)
 Dokumentasi lengkap endpoint dan contoh respons: **[API.md](API.md)** (untuk yang mengerjakan frontend).
+
+Struktur: **Bab (3) -> 5 langkah -> tantangan**. Langkah: Kenali, Temukan, Ingat, Latihan menulis, Kuis.
+Langkah dibuka berurutan (gembok). Latihan menulis belum tersedia dan tidak menghalangi langkah berikutnya.
 
 | Path | Fungsi |
 |---|---|
 | `GET /api/beranda` | Data layar beranda (salam, lanjutkan belajar, ringkasan) |
-| `GET /api/materi` · `/api/materi/:babId` · `/api/materi/:babId/kartu/:kartuId` | Bab, kartu, detail kartu |
-| `GET /api/kuis/:babId` · `POST /api/kuis/:babId/submit` | Ambil soal dan kirim jawaban |
+| `GET /api/materi` | Daftar bab + persen |
+| `GET /api/materi/:babId` | **Jalur 5 langkah** satu bab (status selesai/terbuka/terkunci/segera) |
+| `GET /api/materi/:babId/langkah/:langkahId` | Tantangan dalam satu langkah |
+| `GET .../tantangan/:no/soal` · `POST .../tantangan/:no/submit` | Ambil soal dan kirim jawaban |
+| `GET /api/materi/:babId/kartu/:kartuId` | Detail kartu (otomatis menandai "dilihat") |
 | `GET /api/progres` | Statistik progres |
 
-**Mengedit isi materi:** semua isi (huruf, bacaan, contoh kata, catatan) ada di satu file, `src/content/materi.js`,
-dan bisa diedit lewat GitHub tanpa menyentuh database. Semua kartu masih berstatus `"draf"`; ubah jadi `"final"`
-setelah diverifikasi guru/buku. Kuis dibuat otomatis dari data kartu itu, jadi tidak ada bank soal yang perlu ditulis.
+**Mengedit isi materi dan struktur jalur:** semuanya ada di satu file, `src/content/materi.js`
+(judul langkah, pembagian kartu per tantangan, jumlah soal, ambang lulus), dan bisa diedit lewat GitHub tanpa menyentuh database.
+Semua kartu masih berstatus `"draf"`; ubah jadi `"final"` setelah diverifikasi guru/buku.
+Soal dibuat otomatis dari data kartu, jadi tidak ada bank soal yang perlu ditulis.
 
-Tabel baru (`letter_progress`, `quiz_attempts`, `study_days`) dibuat otomatis pada request pertama setelah deploy.
+Tabel baru (`letter_progress`, `quiz_attempts`, `tantangan_progress`, `study_days`) dibuat otomatis pada request pertama setelah deploy.
+Endpoint lama `/api/kuis/...` sudah diganti oleh endpoint tantangan di atas.
 
 ## Melindungi route lain
 ```js

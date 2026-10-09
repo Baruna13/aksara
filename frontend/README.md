@@ -23,8 +23,9 @@ Tambahkan ke **Authorized JavaScript origins** pada Client ID:
 - domain frontend online nanti (mis. `https://nama-app.vercel.app`)
 
 ## Halaman belajar (versi tipis)
-Halaman di `src/pages/` (`MateriPage`, `BabPage`, `KartuPage`, `KuisPage`, `ProgresPage`, dan `Dashboard` sebagai beranda)
-sengaja dibuat polos, hanya untuk membuktikan alur dan endpoint backend jalan. Tinggal restyle sesuai desain.
+Alur: **Beranda -> Pilih bab -> Perjalanan belajar (5 langkah) -> Langkah (tantangan) -> Tantangan (soal) -> Hasil**.
+Halaman di `src/pages/` (`Dashboard`, `MateriPage`, `PerjalananPage`, `LangkahPage`, `TantanganPage`, `KartuPage`, `ProgresPage`)
+sengaja dibuat polos, hanya untuk membuktikan alur dan endpoint backend jalan. Tinggal restyle sesuai desain Figma.
 Pemanggilan API ada di objek `belajar` di `src/api.js`. Dokumentasi respons: `backend/API.md`.
 
 ## Struktur
@@ -32,7 +33,7 @@ Pemanggilan API ada di objek `belajar` di `src/api.js`. Dokumentasi respons: `ba
 - `src/AuthContext.jsx` - state login (`useAuth()`: user, login, register, loginWithGoogle, logout)
 - `src/components/AuthForm.jsx` - form masuk/daftar + tombol Google
 - `src/pages/` - LoginPage dan Dashboard
-- Rute: `/masuk` (hanya tamu); harus login: `/beranda`, `/materi`, `/materi/:babId`, `/materi/:babId/:kartuId`, `/kuis/:babId`, `/progres`
+- Rute: `/masuk` (hanya tamu); harus login: `/beranda`, `/materi`, `/materi/:babId` (jalur), `/materi/:babId/langkah/:langkahId`, `/materi/:babId/langkah/:langkahId/tantangan/:no`, `/materi/:babId/:kartuId`, `/progres`
 
 ## Deploy ke Vercel
 Framework: Vite. Env var `VITE_API_URL` diisi URL backend online (https), `VITE_GOOGLE_CLIENT_ID` diisi Client ID.

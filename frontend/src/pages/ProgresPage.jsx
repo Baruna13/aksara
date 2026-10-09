@@ -11,12 +11,12 @@ export default function ProgresPage() {
         <>
           <Card>
             <p>{p.streak.hari} hari berturut-turut {p.streak.belajarHariIni ? '(sudah belajar hari ini)' : '(belum belajar hari ini)'}</p>
-            <p>Kartu {p.ringkasan.kartuDilihat}/{p.ringkasan.totalKartu} · Bintang {p.ringkasan.bintangDidapat}/{p.ringkasan.maksBintang}</p>
+            <p>Tantangan {p.ringkasan.tantanganSelesai}/{p.ringkasan.totalTantangan} · Bintang {p.ringkasan.bintangDidapat}/{p.ringkasan.maksBintang}</p>
           </Card>
           <Card>
             <h2>Per bab</h2>
             {p.perBab.map((b) => (
-              <p key={b.id}>{b.judul}: {b.kartuDilihat}/{b.jumlahKartu} kartu · <Bintang n={b.bintangTerbaik} /> · {b.percobaanKuis}x kuis</p>
+              <p key={b.id}>{b.judul}: {b.persen}% · <Bintang n={b.bintangTerbaik} /></p>
             ))}
           </Card>
           <Card>

@@ -28,7 +28,7 @@ export default function KartuPage() {
           {k.cobaTulis.tersedia && <Tombol>Coba tulis</Tombol>}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             {k.sebelumnya ? <Link to={`/materi/${babId}/${k.sebelumnya}`}>← Sebelumnya</Link> : <span />}
-            {k.berikutnya ? <Link to={`/materi/${babId}/${k.berikutnya}`}>Berikutnya →</Link> : <Link to={`/kuis/${babId}`}>Mulai kuis →</Link>}
+            {k.berikutnya ? <Link to={`/materi/${babId}/${k.berikutnya}`}>Berikutnya →</Link> : <Link to={`/materi/${babId}`}>Ke jalur belajar →</Link>}
           </div>
         </>
       )}

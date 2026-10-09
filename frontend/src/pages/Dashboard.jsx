@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { belajar } from '../api.js';
 import { useAuth } from '../AuthContext.jsx';
-import { Aksara, Card, Page, Status, Tombol, useLoad } from './ui.jsx';
+import { Card, Page, Status, Tombol, useLoad } from './ui.jsx';
 
 export default function Dashboard() {
   const { logout } = useAuth();
@@ -14,13 +14,13 @@ export default function Dashboard() {
       {b && (
         <>
           {b.lanjutkan ? (
-            <Link to={`/materi/${b.lanjutkan.babId}/${b.lanjutkan.kartuId}`}>
+            <Link to={`/materi/${b.lanjutkan.babId}/langkah/${b.lanjutkan.langkahId}`}>
               <Tombol as="div" style={{ display: 'grid', placeItems: 'center' }}>
-                Lanjutkan belajar · <Aksara $size="1.2rem">{b.lanjutkan.aksara}</Aksara> {b.lanjutkan.bacaan}
+                Lanjutkan belajar · {b.lanjutkan.langkahJudul}
               </Tombol>
             </Link>
           ) : (
-            <Card>Semua kartu sudah kamu buka. Coba ulangi kuisnya!</Card>
+            <Card>Semua bab sudah selesai. Coba ulangi kuisnya!</Card>
           )}
 
           <div className="grid">
@@ -36,7 +36,7 @@ export default function Dashboard() {
           <Card>
             <h2>Progres kamu</h2>
             <p className="muted">
-              Kartu: {b.ringkasan.kartuDilihat}/{b.ringkasan.totalKartu} · Bintang: {b.ringkasan.bintangDidapat}/{b.ringkasan.maksBintang} ·
+              Tantangan: {b.ringkasan.tantanganSelesai}/{b.ringkasan.totalTantangan} · Bintang: {b.ringkasan.bintangDidapat}/{b.ringkasan.maksBintang} ·
               {' '}{b.streak.hari} hari berturut-turut
             </p>
           </Card>

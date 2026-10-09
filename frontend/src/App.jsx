@@ -3,9 +3,10 @@ import { useAuth } from './AuthContext.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import MateriPage from './pages/MateriPage.jsx';
-import BabPage from './pages/BabPage.jsx';
+import PerjalananPage from './pages/PerjalananPage.jsx';
+import LangkahPage from './pages/LangkahPage.jsx';
 import KartuPage from './pages/KartuPage.jsx';
-import KuisPage from './pages/KuisPage.jsx';
+import TantanganPage from './pages/TantanganPage.jsx';
 import ProgresPage from './pages/ProgresPage.jsx';
 
 function Protected({ children }) {
@@ -28,9 +29,10 @@ export default function App() {
       <Route path="/masuk" element={<GuestOnly><LoginPage /></GuestOnly>} />
       <Route path="/beranda" element={lindungi(<Dashboard />)} />
       <Route path="/materi" element={lindungi(<MateriPage />)} />
-      <Route path="/materi/:babId" element={lindungi(<BabPage />)} />
+      <Route path="/materi/:babId" element={lindungi(<PerjalananPage />)} />
+      <Route path="/materi/:babId/langkah/:langkahId" element={lindungi(<LangkahPage />)} />
+      <Route path="/materi/:babId/langkah/:langkahId/tantangan/:no" element={lindungi(<TantanganPage />)} />
       <Route path="/materi/:babId/:kartuId" element={lindungi(<KartuPage />)} />
-      <Route path="/kuis/:babId" element={lindungi(<KuisPage />)} />
       <Route path="/progres" element={lindungi(<ProgresPage />)} />
       <Route path="*" element={<Navigate to="/beranda" replace />} />
     </Routes>

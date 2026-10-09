@@ -3,53 +3,31 @@
 // perlu dicocokkan dengan buku pelajaran / guru Bahasa Jawa sebelum dianggap final.
 // Edit langsung file ini lewat GitHub; tidak perlu menyentuh database.
 //
+// Struktur:  BAB  ->  5 LANGKAH (jalur ala Duolingo)  ->  TANTANGAN
+//   jenis langkah "mengenal": tantangan = sekelompok kartu yang harus dibuka
+//   jenis langkah "latihan" : tantangan = satu ronde soal (kartuIds = kartu yang diuji, tipe, jumlahSoal)
+//   jenis langkah "tulis"   : belum tersedia (menunggu fitur Nulis), tidak menghalangi langkah berikutnya
+//   jenis langkah "kuis"    : satu kuis campuran untuk seluruh bab
 // Kartu bab "huruf"      : aksara + bacaan + konsonan
-// Kartu bab "sandhangan" : tanda + bunyi (aksara dasar yang dipakai untuk kuis: nglegena kecuali "ha")
+// Kartu bab "sandhangan" : tanda + bunyi (aksara dasar untuk kuis: nglegena kecuali "ha")
 
 export const META = {
   status: 'draf',
   catatan: 'Isi materi masih draf dan perlu diverifikasi guru atau buku pelajaran.',
 };
 
+// Persen benar minimal agar sebuah tantangan latihan dianggap selesai
+export const AMBANG_LULUS = 60;
+
 export const BAB = [
   {
     "id": "nglegena",
     "urutan": 1,
-    "judul": "Aksara nglegena",
-    "ringkasan": "20 aksara dasar Jawa (hanacaraka) dan cara membacanya.",
+    "judul": "Aksara Nglegena",
+    "ringkasan": "Kenali 20 aksara dasar",
+    "warna": "hijau",
+    "deskripsi": "20 aksara dasar Jawa (hanacaraka) dan cara membacanya.",
     "jenis": "huruf",
-    "kelompok": [
-      {
-        "judul": "Nglegena 1–10",
-        "kartuIds": [
-          "ha",
-          "na",
-          "ca",
-          "ra",
-          "ka",
-          "da",
-          "ta",
-          "sa",
-          "wa",
-          "la"
-        ]
-      },
-      {
-        "judul": "Nglegena 11–20",
-        "kartuIds": [
-          "pa",
-          "dha",
-          "ja",
-          "ya",
-          "nya",
-          "ma",
-          "ga",
-          "ba",
-          "tha",
-          "nga"
-        ]
-      }
-    ],
     "kartu": [
       {
         "id": "ha",
@@ -320,26 +298,237 @@ export const BAB = [
         "status": "draf"
       }
     ],
+    "langkah": [
+      {
+        "id": "kenali",
+        "urutan": 1,
+        "judul": "Kenali aksara dasar",
+        "jenis": "mengenal",
+        "label": "Mengenal",
+        "ikon": "mata",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "ha",
+              "na",
+              "ca",
+              "ra",
+              "ka",
+              "da",
+              "ta"
+            ]
+          },
+          {
+            "kartuIds": [
+              "sa",
+              "wa",
+              "la",
+              "pa",
+              "dha",
+              "ja",
+              "ya"
+            ]
+          },
+          {
+            "kartuIds": [
+              "nya",
+              "ma",
+              "ga",
+              "ba",
+              "tha",
+              "nga"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "temukan",
+        "urutan": 2,
+        "judul": "Temukan bentuknya",
+        "jenis": "latihan",
+        "label": "Mengenal",
+        "ikon": "mata",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "ha",
+              "na",
+              "ca",
+              "ra",
+              "ka",
+              "da",
+              "ta"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "sa",
+              "wa",
+              "la",
+              "pa",
+              "dha",
+              "ja",
+              "ya"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "nya",
+              "ma",
+              "ga",
+              "ba",
+              "tha",
+              "nga"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          }
+        ]
+      },
+      {
+        "id": "ingat",
+        "urutan": 3,
+        "judul": "Ingat bunyinya",
+        "jenis": "latihan",
+        "label": "Mengingat",
+        "ikon": "otak",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "ha",
+              "na",
+              "ca",
+              "ra",
+              "ka",
+              "da",
+              "ta"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "sa",
+              "wa",
+              "la",
+              "pa",
+              "dha",
+              "ja",
+              "ya"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "nya",
+              "ma",
+              "ga",
+              "ba",
+              "tha",
+              "nga"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          }
+        ]
+      },
+      {
+        "id": "tulis",
+        "urutan": 4,
+        "judul": "Latihan menulis",
+        "jenis": "tulis",
+        "label": "Menulis",
+        "ikon": "pensil",
+        "tantangan": [
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "ha",
+              "na",
+              "ca",
+              "ra",
+              "ka",
+              "da",
+              "ta"
+            ]
+          },
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "sa",
+              "wa",
+              "la",
+              "pa",
+              "dha",
+              "ja",
+              "ya"
+            ]
+          },
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "nya",
+              "ma",
+              "ga",
+              "ba",
+              "tha",
+              "nga"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "kuis",
+        "urutan": 5,
+        "judul": "Kuis aksara dasar",
+        "jenis": "kuis",
+        "label": "Kuis",
+        "ikon": "bintang",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "ha",
+              "na",
+              "ca",
+              "ra",
+              "ka",
+              "da",
+              "ta",
+              "sa",
+              "wa",
+              "la",
+              "pa",
+              "dha",
+              "ja",
+              "ya",
+              "nya",
+              "ma",
+              "ga",
+              "ba",
+              "tha",
+              "nga"
+            ],
+            "tipe": "campur",
+            "jumlahSoal": 5
+          }
+        ]
+      }
+    ],
     "preview": "ꦲ ꦤ ꦕ ꦫ ꦏ"
   },
   {
     "id": "sandhangan",
     "urutan": 2,
-    "judul": "Sandhangan swara",
-    "ringkasan": "Tanda yang mengubah bunyi vokal aksara: wulu, pepet, suku, taling, dan taling tarung.",
+    "judul": "Sandhangan Swara",
+    "ringkasan": "Ubah bunyi dengan sandhangan",
+    "warna": "kuning",
+    "deskripsi": "Tanda yang mengubah bunyi vokal aksara: wulu, pepet, suku, taling, dan taling tarung.",
     "jenis": "sandhangan",
-    "kelompok": [
-      {
-        "judul": "Sandhangan swara",
-        "kartuIds": [
-          "wulu",
-          "pepet",
-          "suku",
-          "taling",
-          "tarung"
-        ]
-      }
-    ],
     "kartu": [
       {
         "id": "wulu",
@@ -427,25 +616,162 @@ export const BAB = [
         "catatan": "Contoh: ꦏ (ka) + taling tarung = ko."
       }
     ],
+    "langkah": [
+      {
+        "id": "kenali",
+        "urutan": 1,
+        "judul": "Kenali sandhangan",
+        "jenis": "mengenal",
+        "label": "Mengenal",
+        "ikon": "mata",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "wulu",
+              "pepet"
+            ]
+          },
+          {
+            "kartuIds": [
+              "suku",
+              "taling"
+            ]
+          },
+          {
+            "kartuIds": [
+              "tarung"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "temukan",
+        "urutan": 2,
+        "judul": "Temukan tandanya",
+        "jenis": "latihan",
+        "label": "Mengenal",
+        "ikon": "mata",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "wulu",
+              "pepet"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "suku",
+              "taling"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "tarung"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          }
+        ]
+      },
+      {
+        "id": "ingat",
+        "urutan": 3,
+        "judul": "Ingat perubahan bunyi",
+        "jenis": "latihan",
+        "label": "Mengingat",
+        "ikon": "otak",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "wulu",
+              "pepet"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "suku",
+              "taling"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "tarung"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          }
+        ]
+      },
+      {
+        "id": "tulis",
+        "urutan": 4,
+        "judul": "Tulis sandhangan",
+        "jenis": "tulis",
+        "label": "Menulis",
+        "ikon": "pensil",
+        "tantangan": [
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "wulu",
+              "pepet"
+            ]
+          },
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "suku",
+              "taling"
+            ]
+          },
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "tarung"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "kuis",
+        "urutan": 5,
+        "judul": "Kuis sandhangan",
+        "jenis": "kuis",
+        "label": "Kuis",
+        "ikon": "bintang",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "wulu",
+              "pepet",
+              "suku",
+              "taling",
+              "tarung"
+            ],
+            "tipe": "campur",
+            "jumlahSoal": 5
+          }
+        ]
+      }
+    ],
     "preview": "ꦏꦶ ꦏꦼ ꦏꦸ ꦏꦺ ꦏꦺꦴ"
   },
   {
     "id": "panyigeg",
     "urutan": 3,
-    "judul": "Panyigeg & pangkon",
-    "ringkasan": "Tanda penutup suku kata (layar, cecak, wignyan) dan pangkon.",
+    "judul": "Panyigeg & Pangkon",
+    "ringkasan": "Lengkapi bunyi akhir kata",
+    "warna": "ungu",
+    "deskripsi": "Tanda penutup suku kata (layar, cecak, wignyan) dan pangkon.",
     "jenis": "sandhangan",
-    "kelompok": [
-      {
-        "judul": "Panyigeg & pangkon",
-        "kartuIds": [
-          "layar",
-          "cecak",
-          "wignyan",
-          "pangkon"
-        ]
-      }
-    ],
     "kartu": [
       {
         "id": "layar",
@@ -518,6 +844,147 @@ export const BAB = [
         "bacaan": "k",
         "status": "draf",
         "catatan": "Pangkon mematikan bunyi “a” bawaan, sehingga aksara dibaca sebagai konsonan saja. Contoh: ꦏ (ka) + pangkon = k."
+      }
+    ],
+    "langkah": [
+      {
+        "id": "kenali",
+        "urutan": 1,
+        "judul": "Kenali bunyi akhir",
+        "jenis": "mengenal",
+        "label": "Mengenal",
+        "ikon": "mata",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "layar",
+              "cecak"
+            ]
+          },
+          {
+            "kartuIds": [
+              "wignyan"
+            ]
+          },
+          {
+            "kartuIds": [
+              "pangkon"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "temukan",
+        "urutan": 2,
+        "judul": "Temukan penandanya",
+        "jenis": "latihan",
+        "label": "Mengenal",
+        "ikon": "mata",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "layar",
+              "cecak"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "wignyan"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "pangkon"
+            ],
+            "tipe": "latin_ke_aksara",
+            "jumlahSoal": 5
+          }
+        ]
+      },
+      {
+        "id": "ingat",
+        "urutan": 3,
+        "judul": "Ingat bunyi penutup",
+        "jenis": "latihan",
+        "label": "Mengingat",
+        "ikon": "otak",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "layar",
+              "cecak"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "wignyan"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          },
+          {
+            "kartuIds": [
+              "pangkon"
+            ],
+            "tipe": "aksara_ke_latin",
+            "jumlahSoal": 5
+          }
+        ]
+      },
+      {
+        "id": "tulis",
+        "urutan": 4,
+        "judul": "Tulis bunyi akhir",
+        "jenis": "tulis",
+        "label": "Menulis",
+        "ikon": "pensil",
+        "tantangan": [
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "layar",
+              "cecak"
+            ]
+          },
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "wignyan"
+            ]
+          },
+          {
+            "tersedia": false,
+            "kartuIds": [
+              "pangkon"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "kuis",
+        "urutan": 5,
+        "judul": "Kuis akhir",
+        "jenis": "kuis",
+        "label": "Kuis",
+        "ikon": "bintang",
+        "tantangan": [
+          {
+            "kartuIds": [
+              "layar",
+              "cecak",
+              "wignyan",
+              "pangkon"
+            ],
+            "tipe": "campur",
+            "jumlahSoal": 5
+          }
+        ]
       }
     ],
     "preview": "ꦏꦂ ꦏꦁ ꦏꦃ ꦏ꧀"

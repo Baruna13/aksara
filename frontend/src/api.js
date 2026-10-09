@@ -80,13 +80,17 @@ export const api = {
 };
 
 // ---- Fitur belajar (lihat backend/API.md) ----
+const base = (babId, langkahId, no) => `/api/materi/${babId}/langkah/${langkahId}/tantangan/${no}`;
+
 export const belajar = {
   beranda: () => authed('/api/beranda'),
   progres: () => authed('/api/progres'),
   daftarBab: () => authed('/api/materi'),
-  bab: (babId) => authed(`/api/materi/${babId}`),
+  jalur: (babId) => authed(`/api/materi/${babId}`), // perjalanan belajar: 5 langkah
+  langkah: (babId, langkahId) => authed(`/api/materi/${babId}/langkah/${langkahId}`),
   // membuka kartu = otomatis ditandai "dilihat" oleh server
   kartu: (babId, kartuId) => authed(`/api/materi/${babId}/kartu/${kartuId}`),
-  mulaiKuis: (babId) => authed(`/api/kuis/${babId}`),
-  kirimKuis: (babId, jawaban) => authed(`/api/kuis/${babId}/submit`, { method: 'POST', body: { jawaban } }),
+  soal: (babId, langkahId, no) => authed(`${base(babId, langkahId, no)}/soal`),
+  kirim: (babId, langkahId, no, jawaban) =>
+    authed(`${base(babId, langkahId, no)}/submit`, { method: 'POST', body: { jawaban } }),
 };

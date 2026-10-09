@@ -12,7 +12,13 @@ router.get('/progres', requireAuth, wrap(ctrl.progres));
 router.get('/materi', requireAuth, wrap(ctrl.daftarBab));
 router.get('/materi/:babId', requireAuth, wrap(ctrl.detailBab));
 router.get('/materi/:babId/kartu/:kartuId', requireAuth, wrap(ctrl.detailKartu));
-router.get('/kuis/:babId', requireAuth, wrap(ctrl.mulaiKuis));
-router.post('/kuis/:babId/submit', requireAuth, validate(submitKuisSchema), wrap(ctrl.kirimKuis));
+router.get('/materi/:babId/langkah/:langkahId', requireAuth, wrap(ctrl.detailLangkah));
+router.get('/materi/:babId/langkah/:langkahId/tantangan/:no/soal', requireAuth, wrap(ctrl.soalTantangan));
+router.post(
+  '/materi/:babId/langkah/:langkahId/tantangan/:no/submit',
+  requireAuth,
+  validate(submitKuisSchema),
+  wrap(ctrl.kirimTantangan)
+);
 
 export default router;

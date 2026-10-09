@@ -76,6 +76,20 @@ export async function initDb() {
     );
     CREATE INDEX IF NOT EXISTS quiz_attempts_user_idx ON quiz_attempts (user_id, bab_id);
 
+    ALTER TABLE quiz_attempts ADD COLUMN IF NOT EXISTS tantangan_id TEXT;
+
+    -- Status tiap tantangan latihan/kuis. tantangan_id = 'babId/langkahId/no', mis. 'nglegena/temukan/2'
+    CREATE TABLE IF NOT EXISTS tantangan_progress (
+      user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      tantangan_id    TEXT NOT NULL,
+      selesai         BOOLEAN NOT NULL DEFAULT false,
+      percobaan       INTEGER NOT NULL DEFAULT 0,
+      skor_terbaik    INTEGER NOT NULL DEFAULT 0,
+      bintang_terbaik INTEGER NOT NULL DEFAULT 0,
+      selesai_at      TIMESTAMPTZ,
+      PRIMARY KEY (user_id, tantangan_id)
+    );
+
     -- Hari-hari ada aktivitas belajar (untuk hari berturut-turut), tanggal zona WIB
     CREATE TABLE IF NOT EXISTS study_days (
       user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

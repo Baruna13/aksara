@@ -47,24 +47,25 @@ function susun(bab, kartu, dasar, tipe) {
   };
 }
 
-export function buatKuis(babId, jumlah = 10) {
-  const bab = getBab(babId);
-  if (!bab) return null;
+// Buat soal untuk satu tantangan: { kartuIds, tipe: 'aksara_ke_latin' | 'latin_ke_aksara' | 'campur', jumlahSoal }
+export function buatSoal(bab, t) {
+  const pool = bab.kartu.filter((k) => t.kartuIds.includes(k.id));
+  const tipeSoal = () => (t.tipe === 'campur' ? pilihTipe() : t.tipe);
   const soal = [];
 
   if (bab.jenis === 'huruf') {
-    for (const k of acak(bab.kartu).slice(0, jumlah)) soal.push(susun(bab, k, null, pilihTipe()));
+    for (const k of acak(pool).slice(0, t.jumlahSoal)) soal.push(susun(bab, k, null, tipeSoal()));
   } else {
-    // Bagi rata ke semua sandhangan, tiap soal memakai aksara dasar yang berbeda
-    const urut = acak(bab.kartu);
+    // Bagi rata ke semua sandhangan di kelompok, tiap soal memakai aksara dasar yang berbeda
+    const urut = acak(pool);
     const dipakai = new Set();
-    for (let i = 0; i < jumlah; i++) {
+    for (let i = 0; i < t.jumlahSoal; i++) {
       const k = urut[i % urut.length];
       let dasar;
       do dasar = DASAR[Math.floor(Math.random() * DASAR.length)];
       while (dipakai.has(k.id + dasar.id));
       dipakai.add(k.id + dasar.id);
-      soal.push(susun(bab, k, dasar, pilihTipe()));
+      soal.push(susun(bab, k, dasar, tipeSoal()));
     }
   }
   return soal.map((s, i) => ({ no: i + 1, ...s }));
@@ -92,7 +93,12 @@ export function hitungBintang(persen) {
   return 1; // selesai = minimal 1 bintang
 }
 
-export function nilaiKuis(babId, jawaban) {
+// aturan = tantangan (kartuIds, tipe, jumlahSoal): jawaban harus sesuai tantangan itu,
+// supaya tidak bisa lulus dengan mengirim satu soal termudah saja.
+export function nilaiKuis(babId, jawaban, aturan = null) {
+  if (aturan && jawaban.length !== aturan.jumlahSoal) {
+    throw new AppError(400, `Jawaban harus berjumlah ${aturan.jumlahSoal}`, 'WRONG_ANSWER_COUNT');
+  }
   const refs = new Set();
   const hasil = [];
   const perKartu = new Map();
@@ -102,6 +108,12 @@ export function nilaiKuis(babId, jawaban) {
     refs.add(j.ref);
     const k = kunci(babId, j.ref);
     if (!k) throw new AppError(400, 'Soal tidak valid', 'INVALID_QUESTION');
+    if (aturan) {
+      const tipe = j.ref.split('|')[1];
+      if (!aturan.kartuIds.includes(k.kartuId) || (aturan.tipe !== 'campur' && tipe !== aturan.tipe)) {
+        throw new AppError(400, 'Soal bukan bagian dari tantangan ini', 'QUESTION_NOT_IN_CHALLENGE');
+      }
+    }
     const benar = j.pilih === k.benar;
     hasil.push({ ref: j.ref, kartuId: k.kartuId, benar, pilih: j.pilih, jawabanBenar: k.benar });
     const c = perKartu.get(k.kartuId) ?? { benar: 0, salah: 0 };
