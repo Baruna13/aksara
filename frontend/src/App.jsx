@@ -8,6 +8,8 @@ import LangkahPage from './pages/LangkahPage.jsx';
 import KartuPage from './pages/KartuPage.jsx';
 import TantanganPage from './pages/TantanganPage.jsx';
 import ProgresPage from './pages/ProgresPage.jsx';
+import ProfilPage from './pages/ProfilPage.jsx';
+import EditProfilPage from './pages/EditProfilPage.jsx';
 
 function Protected({ children }) {
   const { user, loading } = useAuth();
@@ -33,6 +35,8 @@ export default function App() {
       <Route path="/materi/:babId/langkah/:langkahId" element={lindungi(<LangkahPage />)} />
       <Route path="/materi/:babId/langkah/:langkahId/tantangan/:no" element={lindungi(<TantanganPage />)} />
       <Route path="/materi/:babId/:kartuId" element={lindungi(<KartuPage />)} />
+      <Route path="/profil" element={lindungi(<ProfilPage />)} />
+      <Route path="/profil/edit" element={lindungi(<EditProfilPage />)} />
       <Route path="/progres" element={lindungi(<ProgresPage />)} />
       <Route path="*" element={<Navigate to="/beranda" replace />} />
     </Routes>

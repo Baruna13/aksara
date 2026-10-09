@@ -43,6 +43,7 @@ export async function initDb() {
     );
     CREATE UNIQUE INDEX IF NOT EXISTS users_username_lower_idx ON users (lower(username));
     CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_idx    ON users (lower(email));
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar TEXT NOT NULL DEFAULT 'aksa';
 
     CREATE TABLE IF NOT EXISTS refresh_tokens (
       id         INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

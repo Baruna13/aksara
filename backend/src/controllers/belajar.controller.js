@@ -116,7 +116,7 @@ export async function beranda(req, res) {
       { id: 'belajar', judul: 'Belajar', aktif: true, rute: '/materi' },
       { id: 'latihan', judul: 'Latihan menulis', aktif: false, rute: null },
       { id: 'scan', judul: 'Scan aksara', aktif: false, rute: null },
-      { id: 'progres', judul: 'Progres', aktif: true, rute: '/progres' },
+      { id: 'progres', judul: 'Progres Saya', aktif: true, rute: '/profil' },
     ],
   });
 }

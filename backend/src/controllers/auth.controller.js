@@ -11,6 +11,7 @@ const publicUser = (u) => ({
   name: u.name,
   username: u.username,
   email: u.email,
+  avatar: u.avatar,
   createdAt: u.created_at,
 });
 

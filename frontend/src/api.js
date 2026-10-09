@@ -94,3 +94,17 @@ export const belajar = {
   kirim: (babId, langkahId, no, jawaban) =>
     authed(`${base(babId, langkahId, no)}/submit`, { method: 'POST', body: { jawaban } }),
 };
+
+// ---- Profil & akun (lihat backend/API.md bagian "Profil") ----
+export const akun = {
+  profil: () => authed('/api/profil'),
+  // kirim hanya field yang berubah: { nama?, email?, avatar? }
+  ubahProfil: (data) => authed('/api/profil', { method: 'PATCH', body: data }),
+  avatar: () => authed('/api/avatar'),
+  // Server mencabut sesi lama dan membalas token baru: WAJIB disimpan, kalau tidak user ter-logout.
+  ubahSandi: async (body) => {
+    const d = await authed('/api/profil/kata-sandi', { method: 'POST', body });
+    tokenStore.set({ accessToken: d.accessToken, refreshToken: d.refreshToken });
+    return d;
+  },
+};

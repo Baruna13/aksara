@@ -54,7 +54,8 @@ Aturan tampilan: teks aksara (`aksara`, dan pilihan jika `pilihanJenis: "aksara"
 | GET | `/api/materi/:babId/langkah/:langkahId/tantangan/:no/soal` | Ambil 5 soal | Latihan / kuis |
 | POST | `/api/materi/:babId/langkah/:langkahId/tantangan/:no/submit` | Kirim jawaban | Hasil |
 | GET | `/api/materi/:babId/kartu/:kartuId` | Detail kartu. **Otomatis menandai kartu "dilihat"** | Kartu huruf |
-| GET | `/api/progres` | Statistik lengkap | Progres |
+| GET | `/api/profil` | Profil + statistik (lihat bagian Profil) | Progres Saya |
+| GET | `/api/progres` | Detail: huruf sering salah, riwayat kuis | Detail progres |
 
 ---
 
@@ -108,9 +109,9 @@ Untuk tombol, arahkan ke `/materi/:babId/langkah/:langkahId`.
     },
     {
       "id": "progres",
-      "judul": "Progres",
+      "judul": "Progres Saya",
       "aktif": true,
-      "rute": "/progres"
+      "rute": "/profil"
     }
   ]
 }
@@ -630,8 +631,209 @@ Kartu sandhangan (bab 2 dan 3) punya `komponen` dan `posisi`:
 
 ---
 
+## Profil ("Progres Saya", Edit Profil, ganti avatar)
+
+Layar profil di Figma adalah tab **Progres Saya**. Satu endpoint `GET /api/profil` sudah memuat semua isinya.
+
+| Method | Path | Fungsi | Layar |
+|---|---|---|---|
+| GET | `/api/profil` | Nama, avatar, email, statistik, "Perjalanan belajarmu" | Progres Saya / Edit Profil |
+| PATCH | `/api/profil` | Ubah `nama`, `email`, dan/atau `avatar` (kirim yang berubah saja) | Edit Profil, modal ganti avatar |
+| GET | `/api/avatar` | Katalog avatar + avatar yang sedang dipakai | Modal "Pilih teman belajarmu" |
+| POST | `/api/profil/kata-sandi` | Ganti atau pasang kata sandi | Ganti kata sandi |
+
+### GET /api/profil
+- **"Pelajaran" = langkah** (Kenali, Temukan, Ingat, Menulis). Karena Latihan menulis belum ada, saat ini totalnya **12** (4 per bab), bukan 15
+  seperti di desain. Angkanya otomatis menjadi 15 begitu langkah menulis tersedia, jadi jangan di-hardcode.
+- `ringkasan.persen` = `pelajaranSelesai / totalPelajaran` (angka "33%"). `perjalanan[].persen` berbasis tantangan, cocok untuk bar progres yang naik halus.
+- `avatar` berisi `id` (nama file gambar di frontend, mis. `/avatar/aksa.png`), `nama`, `tagline`, dan `sapaan` (teks bubble "Aku teman setiap langkahmu.").
+- `metodeMasuk` menentukan tampilan: akun Google punya `google: true`. Jika `password: false`, tombol di Edit Profil sebaiknya berbunyi **"Pasang kata sandi"** dan kolom "sandi saat ini" disembunyikan.
+- Kalau `ringkasan.pelajaranSelesai === 0`, tampilkan teks kosong "Langkah pertamamu menunggu...".
+```json
+{
+  "id": 1,
+  "nama": "Tes budi_a",
+  "username": "budi_a",
+  "email": null,
+  "avatar": {
+    "id": "aksa",
+    "nama": "Aksa",
+    "tagline": "Teman belajar setia",
+    "sapaan": "Aku teman setiap langkahmu."
+  },
+  "tagline": "Teman belajar aksara Jawa",
+  "metodeMasuk": {
+    "password": true,
+    "google": false
+  },
+  "bergabung": "2026-10-09T10:39:10.483Z",
+  "streak": {
+    "hari": 0,
+    "belajarHariIni": false
+  },
+  "ringkasan": {
+    "pelajaranSelesai": 0,
+    "totalPelajaran": 12,
+    "babTuntas": 0,
+    "totalBab": 3,
+    "persen": 0
+  },
+  "perjalanan": [
+    {
+      "babId": "nglegena",
+      "urutan": 1,
+      "judul": "Aksara Nglegena",
+      "warna": "hijau",
+      "totalPelajaran": 4,
+      "pelajaranSelesai": 0,
+      "persen": 0,
+      "selesai": false
+    },
+    {
+      "babId": "sandhangan",
+      "urutan": 2,
+      "judul": "Sandhangan Swara",
+      "warna": "kuning",
+      "totalPelajaran": 4,
+      "pelajaranSelesai": 0,
+      "persen": 0,
+      "selesai": false
+    },
+    {
+      "babId": "panyigeg",
+      "urutan": 3,
+      "judul": "Panyigeg & Pangkon",
+      "warna": "ungu",
+      "totalPelajaran": 4,
+      "pelajaranSelesai": 0,
+      "persen": 0,
+      "selesai": false
+    }
+  ]
+}
+```
+
+Setelah Bab 1 tuntas:
+```json
+{
+  "id": 1,
+  "nama": "Tes budi_a",
+  "username": "budi_a",
+  "email": null,
+  "avatar": {
+    "id": "aksa",
+    "nama": "Aksa",
+    "tagline": "Teman belajar setia",
+    "sapaan": "Aku teman setiap langkahmu."
+  },
+  "tagline": "Teman belajar aksara Jawa",
+  "metodeMasuk": {
+    "password": true,
+    "google": false
+  },
+  "bergabung": "2026-10-09T10:39:10.483Z",
+  "streak": {
+    "hari": 1,
+    "belajarHariIni": true
+  },
+  "ringkasan": {
+    "pelajaranSelesai": 4,
+    "totalPelajaran": 12,
+    "babTuntas": 1,
+    "totalBab": 3,
+    "persen": 33
+  },
+  "perjalanan": [
+    {
+      "babId": "nglegena",
+      "urutan": 1,
+      "judul": "Aksara Nglegena",
+      "warna": "hijau",
+      "totalPelajaran": 4,
+      "pelajaranSelesai": 4,
+      "persen": 100,
+      "selesai": true
+    },
+    {
+      "babId": "sandhangan",
+      "urutan": 2,
+      "judul": "Sandhangan Swara",
+      "warna": "kuning",
+      "totalPelajaran": 4,
+      "pelajaranSelesai": 0,
+      "persen": 0,
+      "selesai": false
+    },
+    "..."
+  ]
+}
+```
+
+### PATCH /api/profil
+Kirim hanya field yang berubah. Respons = isi `GET /api/profil` yang sudah diperbarui.
+```json
+{ "nama": "Kenji Morales", "email": "kenji@mail.com", "avatar": "ceria" }
+```
+- `nama` (nama panggilan): 2 sampai 50 karakter.
+- `email`: opsional. Kirim `""` atau `null` untuk menghapus.
+- `avatar`: harus salah satu `id` dari `GET /api/avatar`.
+
+| HTTP | code | Kapan |
+|---|---|---|
+| 400 | `VALIDATION_ERROR` | Nama terlalu pendek/panjang, format email salah, atau body kosong |
+| 400 | `INVALID_AVATAR` | `avatar` tidak ada di katalog |
+| 403 | `GOOGLE_EMAIL_LOCKED` | Akun yang tersambung Google mencoba **mengganti** email (email-nya dari Google). Nonaktifkan kolom email untuk akun ini (`metodeMasuk.google`) |
+| 409 | `EMAIL_TAKEN` | Email sudah dipakai akun lain |
+
+### GET /api/avatar
+```json
+{
+  "dipakai": "aksa",
+  "avatar": [
+    {
+      "id": "aksa",
+      "nama": "Aksa",
+      "tagline": "Teman belajar setia",
+      "sapaan": "Aku teman setiap langkahmu."
+    },
+    {
+      "id": "pembaca",
+      "nama": "Si Pembaca",
+      "tagline": "Suka membaca aksara",
+      "sapaan": "Ayo baca aksara bareng aku!"
+    }
+  ]
+}
+```
+Hanya `aksa` yang namanya pasti dari desain; nama dan tagline lainnya masih draf (lihat `backend/src/content/avatar.js`).
+
+### POST /api/profil/kata-sandi
+```json
+{ "sandiSaatIni": "...", "sandiBaru": "minimal 8 karakter" }
+```
+- Akun yang **sudah punya** kata sandi: `sandiSaatIni` wajib. Akun Google yang **belum punya** kata sandi: kosongkan `sandiSaatIni` (ini memasang kata sandi untuk login manual).
+- Server mencabut semua sesi lama. **Respons berisi token baru; simpan keduanya** (`api.js` pada `akun.ubahSandi` sudah melakukannya), kalau tidak pengguna akan ter-logout di perangkat ini.
+- Dibatasi 10 percobaan per 15 menit (`429 RATE_LIMIT`).
+```json
+{
+  "pesan": "Kata sandi berhasil diperbarui",
+  "accessToken": "...",
+  "refreshToken": "..."
+}
+```
+
+| HTTP | code | Kapan |
+|---|---|---|
+| 400 | `CURRENT_PASSWORD_REQUIRED` | Akun punya kata sandi tapi `sandiSaatIni` kosong |
+| 400 | `WRONG_PASSWORD` | `sandiSaatIni` salah (sengaja 400, bukan 401, supaya frontend tidak mengira token kedaluwarsa) |
+| 400 | `SAME_PASSWORD` | Sandi baru sama dengan yang lama |
+| 400 | `VALIDATION_ERROR` | Sandi baru kurang dari 8 atau lebih dari 72 karakter |
+
+Catatan: desain Figma bertuliskan "Mode demo: form ini tidak menyimpan atau mengubah kata sandi". Itu tidak berlaku lagi, karena
+autentikasi sudah terhubung dan form ini benar-benar mengubah kata sandi. Teks mode demo sebaiknya dihapus dari desain.
+
 ## Rute halaman yang disarankan
-`/beranda` · `/materi` · `/materi/:babId` (jalur) · `/materi/:babId/langkah/:langkahId` · `/materi/:babId/langkah/:langkahId/tantangan/:no` · `/materi/:babId/:kartuId` · `/progres`
+`/beranda` · `/materi` · `/materi/:babId` (jalur) · `/materi/:babId/langkah/:langkahId` · `/materi/:babId/langkah/:langkahId/tantangan/:no` · `/materi/:babId/:kartuId` · `/profil` (Progres Saya) · `/profil/edit` · `/progres` (detail: huruf sering salah, riwayat)
 
 ## Catatan untuk yang membangun frontend
 - Jangan hitung nilai, bintang, persen, status gembok, atau streak di frontend: semuanya sudah dihitung server.

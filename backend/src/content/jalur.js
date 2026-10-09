@@ -57,3 +57,13 @@ export function ringkasBab(bab, st) {
     selesaiSemua: total > 0 && selesai === total,
   };
 }
+
+// "Pelajaran" di layar profil = langkah yang sudah tersedia (Latihan menulis belum dihitung).
+// Total otomatis naik dari 12 ke 15 begitu langkah menulis tersedia.
+export function ringkasPelajaran(bab, st) {
+  const tersedia = hitungJalur(bab, st).filter((j) => j.status !== 'segera');
+  return {
+    totalPelajaran: tersedia.length,
+    pelajaranSelesai: tersedia.filter((j) => j.status === 'selesai').length,
+  };
+}

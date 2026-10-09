@@ -60,6 +60,19 @@ Soal dibuat otomatis dari data kartu, jadi tidak ada bank soal yang perlu dituli
 Tabel baru (`letter_progress`, `quiz_attempts`, `tantangan_progress`, `study_days`) dibuat otomatis pada request pertama setelah deploy.
 Endpoint lama `/api/kuis/...` sudah diganti oleh endpoint tantangan di atas.
 
+## Profil
+Layar "Progres Saya", Edit Profil, dan ganti avatar. Detail di **[API.md](API.md)** bagian Profil.
+
+| Path | Fungsi |
+|---|---|
+| `GET /api/profil` | Nama, avatar, email, statistik (pelajaran selesai, bab tuntas, persen), "Perjalanan belajarmu" |
+| `PATCH /api/profil` | Ubah nama panggilan, email, dan/atau avatar |
+| `GET /api/avatar` | Katalog avatar (`src/content/avatar.js`) |
+| `POST /api/profil/kata-sandi` | Ganti kata sandi (atau pasang untuk akun Google). Mencabut semua sesi lama dan membalas token baru |
+
+Catatan: email akun yang tersambung Google tidak bisa diganti dari profil. Email belum diverifikasi (belum ada pengiriman email);
+sebelum dipakai publik, sebaiknya tambahkan verifikasi email.
+
 ## Melindungi route lain
 ```js
 import { requireAuth } from '../middleware/auth.js';

@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { env } from './config/env.js';
 import authRoutes from './routes/auth.routes.js';
 import belajarRoutes from './routes/belajar.routes.js';
+import profilRoutes from './routes/profil.routes.js';
 import devRoutes from './routes/dev.routes.js';
 import { ensureDb } from './db/index.js';
 import { AppError } from './utils/AppError.js';
@@ -43,7 +44,8 @@ app.use('/api', async (_req, _res, next) => {
 app.get('/health', (_req, res) => res.json({ ok: true }));
 app.use('/api/auth', authRoutes);
 
-app.use('/api', belajarRoutes); // beranda, materi, kuis, progres
+app.use('/api', belajarRoutes); // beranda, materi, tantangan, progres
+app.use('/api', profilRoutes); // profil, avatar, ganti kata sandi
 
 // Nanti tambah di sini:
 // app.use('/api/scanner', scannerRoutes);
